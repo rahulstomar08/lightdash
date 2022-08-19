@@ -38,34 +38,25 @@ const useTableConfig = (
 
     const itemsMap = useMemo(() => {
         if (explore) {
-            const allItemsMap = getItemMap(
+            return getItemMap(
                 explore,
                 resultsData?.metricQuery.additionalMetrics,
                 resultsData?.metricQuery.tableCalculations,
             );
-            return Object.entries(allItemsMap).reduce<
-                Record<string, Field | TableCalculation>
-            >(
-                (acc, [key, value]) =>
-                    columnOrder.includes(key)
-                        ? {
-                              ...acc,
-                              [key]: value,
-                          }
-                        : acc,
-                {},
-            );
         }
         return {};
-    }, [explore, resultsData, columnOrder]);
+    }, [explore, resultsData]);
 
     const getDefaultColumnLabel = useCallback(
         (fieldId: string) => {
-            const item = itemsMap[fieldId];
+            const item: Field | TableCalculation | undefined =
+                itemsMap[fieldId];
             if (isField(item) && !showTableNames) {
                 return item.label;
-            } else {
+            } else if (item) {
                 return getItemLabel(item);
+            } else {
+                return fieldId;
             }
         },
         [itemsMap, showTableNames],
