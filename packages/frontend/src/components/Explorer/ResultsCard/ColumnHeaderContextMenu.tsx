@@ -1,5 +1,5 @@
-import { Menu, MenuItem } from '@blueprintjs/core';
-import { ContextMenu2 } from '@blueprintjs/popover2';
+import { Menu } from '@blueprintjs/core';
+import { MenuItem2 } from '@blueprintjs/popover2';
 import { fieldId, isField, isFilterableField } from '@lightdash/common';
 import React from 'react';
 import { useFilters } from '../../../hooks/useFilters';
@@ -19,58 +19,47 @@ const ColumnHeaderContextMenu: React.FC<HeaderProps> = ({
     const {
         actions: { removeActiveField },
     } = useExplorer();
+
     if (item && isField(item) && isFilterableField(item)) {
         return (
-            <ContextMenu2
-                content={
-                    <Menu>
-                        <MenuItem
-                            text={`Filter by ${item.label}`}
-                            icon={'filter'}
-                            onClick={(e) => {
-                                track({
-                                    name: EventName.ADD_FILTER_CLICKED,
-                                });
-                                e.stopPropagation();
-                                addFilter(item, undefined, false);
-                            }}
-                        />
+            <Menu>
+                <MenuItem2
+                    text={`Filter by ${item.label}`}
+                    icon={'filter'}
+                    onClick={() => {
+                        track({
+                            name: EventName.ADD_FILTER_CLICKED,
+                        });
+                        addFilter(item, undefined, false);
+                    }}
+                />
 
-                        <MenuItem
-                            text={`Remove`}
-                            icon={'cross'}
-                            onClick={(e) => {
-                                e.stopPropagation();
-                                removeActiveField(fieldId(item));
-                            }}
-                        />
-                    </Menu>
-                }
-            >
-                {children}
-            </ContextMenu2>
+                <MenuItem2
+                    text="Remove"
+                    icon="cross"
+                    intent="danger"
+                    onClick={() => {
+                        removeActiveField(fieldId(item));
+                    }}
+                />
+            </Menu>
         );
     } else if (meta?.isInvalidItem) {
         return (
-            <ContextMenu2
-                content={
-                    <Menu>
-                        <MenuItem
-                            text={`Remove`}
-                            icon={'cross'}
-                            onClick={(e) => {
-                                e.stopPropagation();
-                                removeActiveField(header.column.id);
-                            }}
-                        />
-                    </Menu>
-                }
-            >
-                {children}
-            </ContextMenu2>
+            <Menu>
+                <MenuItem2
+                    text="Remove"
+                    icon="cross"
+                    intent="danger"
+                    onClick={() => {
+                        removeActiveField(header.column.id);
+                    }}
+                />
+            </Menu>
         );
+    } else {
+        return <>{children}</>;
     }
-    return <>{children}</>;
 };
 
 export default ColumnHeaderContextMenu;
