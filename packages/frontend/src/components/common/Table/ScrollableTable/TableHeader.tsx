@@ -4,7 +4,7 @@ import { isField } from '@lightdash/common';
 import { flexRender } from '@tanstack/react-table';
 import React, { FC } from 'react';
 import { Draggable } from 'react-beautiful-dnd';
-import { TableHeaderActions } from '../Table.styles';
+import { DraggableTableHeader, TableHeaderActions } from '../Table.styles';
 import { useTableContext } from '../TableProvider';
 import { TableColumn } from '../types';
 import { HeaderDndContext, HeaderDroppable } from './HeaderDnD';
@@ -64,10 +64,7 @@ const TableHeader: FC = () => {
                                                         snapshot.isDragging
                                                     }
                                                 >
-                                                    <div
-                                                        ref={provided.innerRef}
-                                                        {...provided.draggableProps}
-                                                        {...provided.dragHandleProps}
+                                                    <DraggableTableHeader
                                                         style={{
                                                             ...provided
                                                                 .draggableProps
@@ -80,21 +77,25 @@ const TableHeader: FC = () => {
                                                                 transitionDuration:
                                                                     '0.001s',
                                                             }),
-                                                            display: 'flex',
-                                                            justifyContent:
-                                                                'space-between',
-                                                            alignItems:
-                                                                'center',
                                                         }}
                                                     >
-                                                        {header.isPlaceholder
-                                                            ? null
-                                                            : flexRender(
-                                                                  header.column
-                                                                      .columnDef
-                                                                      .header,
-                                                                  header.getContext(),
-                                                              )}
+                                                        <div
+                                                            ref={
+                                                                provided.innerRef
+                                                            }
+                                                            {...provided.draggableProps}
+                                                            {...provided.dragHandleProps}
+                                                        >
+                                                            {header.isPlaceholder
+                                                                ? null
+                                                                : flexRender(
+                                                                      header
+                                                                          .column
+                                                                          .columnDef
+                                                                          .header,
+                                                                      header.getContext(),
+                                                                  )}
+                                                        </div>
 
                                                         <TableHeaderActions>
                                                             {meta?.sort && (
@@ -103,34 +104,35 @@ const TableHeader: FC = () => {
                                                                 />
                                                             )}
 
-                                                            {headerContextMenu && (
-                                                                <Popover2
-                                                                    minimal
-                                                                    lazy
-                                                                    position={
-                                                                        PopoverPosition.BOTTOM_RIGHT
-                                                                    }
-                                                                    content={
-                                                                        <HeaderContextMenu
-                                                                            header={
-                                                                                header
-                                                                            }
-                                                                        />
-                                                                    }
-                                                                >
-                                                                    <Button
+                                                            {!!headerContextMenu &&
+                                                                !!meta?.item && (
+                                                                    <Popover2
                                                                         minimal
-                                                                        small
-                                                                        icon="more"
-                                                                    />
-                                                                </Popover2>
-                                                            )}
+                                                                        lazy
+                                                                        position={
+                                                                            PopoverPosition.BOTTOM_RIGHT
+                                                                        }
+                                                                        content={
+                                                                            <HeaderContextMenu
+                                                                                header={
+                                                                                    header
+                                                                                }
+                                                                            />
+                                                                        }
+                                                                    >
+                                                                        <Button
+                                                                            minimal
+                                                                            small
+                                                                            icon="more"
+                                                                        />
+                                                                    </Popover2>
+                                                                )}
 
                                                             <HeaderButton
                                                                 header={header}
                                                             />
                                                         </TableHeaderActions>
-                                                    </div>
+                                                    </DraggableTableHeader>
                                                 </Tooltip2>
                                             )}
                                         </Draggable>

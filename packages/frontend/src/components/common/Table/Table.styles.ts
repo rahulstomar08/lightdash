@@ -149,3 +149,9 @@ export const TableHeaderActions = styled.div`
         margin-right: 10px;
     }
 `;
+
+export const DraggableTableHeader = styled.div`
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+`;
